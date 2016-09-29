@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fdmy.model.Stock">
+	<!-- 
+		借用number字段传输库存值
+		//TODO: 专门写一个Stock类，用来保存查询结果 
+	<resultMap type="Account" id="stockresultMap" autoMapping="true">
+		<result column="number" property="number"/>
+		<result column="type" property="type"/>
+		<result column="department" property="department"/>
+		<association property="item" javaType="Item">
+			<result column="item_code" property="code"/>
+			<result column="item_name" property="name"/>
+			<result column="item_model" property="model"/>
+			<result column="unit" property="unit"/>
+		</association>
+	</resultMap>
+	 -->
+	
+	<select id = "checkstock"  resultType="Stock" >
+		select item_code as itemcode,item_name as itemname,item_model as itemmodel,unit as itemunit,type,department,sum(number) as number from t_account 
+		<where>
+			<choose>
+				<when test="itemCode != null">
+					item_code = #{itemCode}
+				</when>
+				<when test="itemName != null">
+					item_name = #{itemName}
+				</when>
+				<when test="model != null">
+					item_model = #{model}
+				</when>
+				<otherwise>
+					and exists (select 1 from t_item  where t_account.item_code = t_item.code)
+				</otherwise>
+			</choose>
+			<if test="department != null">
+				and department = #{department}
+			</if>
+		       and type = #{type}
+		</where>
+		group by item_code ,type, department
+		order by item_code,type
+	</select>
+	
+</mapper>

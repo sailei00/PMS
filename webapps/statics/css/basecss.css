@@ -1,0 +1,23 @@
+@charset "UTF-8";
+body, button, input, select, textarea, h1, h2, h3, h4, h5, h6,label,a {
+	font-family: Microsoft YaHei, '宋体', Tahoma, Helvetica, Arial,"\5b8b\4f53", sans-serif;
+}
+
+body {
+	background-color: #efeeea; //
+	background: linear-gradient(#f9f9f9, #cecbc4); //
+	background: -moz-linear-gradient(#f9f9f9, #cecbc4); //
+	background: -webkit-linear-gradient(#f9f9f9, #cecbc4);
+	background: -o-linear-gradient(#f9f9f9, #cecbc4);
+}
+
+table {
+	border-collapse: collapse;
+	border-color: black;
+}
+
+table td {
+	border-color: black;
+	padding: 0px 2px;
+}
+

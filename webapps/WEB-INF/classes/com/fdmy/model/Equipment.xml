@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fdmy.model.Equipment">
+
+	<insert id="add" parameterType="Equipment">
+	INSERT INTO t_equipment
+    (
+    	id,
+        equipmentNo,
+        equipmentName,
+        category,
+        model,
+        status,
+        factory,
+        techFeature,
+        unit,
+        count,
+        productDate,
+        productNo,
+        buyDate,
+        useDate,
+        inputDate,
+        validDate,
+        department,
+        address,
+        principal
+    )
+    VALUES
+    (
+    	replace(uuid(),'-',''),
+   		#{equipmentNo},   
+        #{equipmentName},
+        #{category},
+        #{model},
+        #{status},
+        #{factory},
+        #{techFeature},
+        #{unit},
+        #{count},
+        #{productDate},
+        #{productNo},
+        #{buyDate},
+        #{useDate},
+        #{inputDate},
+        #{validDate},
+        #{department},
+        #{address},
+        #{principal}
+    )
+	</insert>
+
+	<update id="update" parameterType="Equipment">
+		update t_equipment
+		<set>
+			equipmentNo =#{equipmentNo},
+			equipmentName =#{equipmentName},
+			category = #{category},
+			model=#{model},
+			status=#{status},
+			factory=#{factory},
+			techFeature=#{techFeature},
+			unit=#{unit},
+			count=#{count},
+			productDate=#{productDate},
+			productNo=#{productNo},
+			buyDate=#{buyDate},
+			useDate=#{useDate},
+			inputDate=#{inputDate},
+			validDate=#{validDate},
+			department=#{department},
+			principal=#{principal},
+			address=#{address}
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		delete from t_equipment where id = #{id}
+	</delete>
+
+	<select id="load" parameterType="String" resultType="Equipment">
+		select *	from t_equipment where id = #{id} 
+	</select>
+	
+	<select id="loadByEquipmentNo" parameterType="String" resultType="Equipment">
+		select *	from t_equipment where equipmentNo = #{equipmentNo} 
+	</select>
+	
+	<select id="loadByProductNo" parameterType="String" resultType="Equipment">
+		select *	from t_equipment where productNo = #{productNo} 
+	</select>
+
+	<select id="query" parameterType="Equipment" resultType="Equipment">
+		select * from t_equipment
+		<where>
+			<if test="equipmentNo != null"> and equipmentNo = #{equipmentNo}	</if>
+			<if test="equipmentName != null"> and equipmentName like '%${equipmentName}%'	</if>
+			<if test="model != null"> and model like '%${model}%'	</if>
+			<if test="category != null"> and category like '%${catetory}%'	</if>
+			<if test="productNo != null"> and productNo = #{productNo}	</if>
+			<if test="factory != null"> and factory = #{factory}	</if>
+			<if test="department != null"> and department = #{department}</if>
+			<if test="status != null"> and status = #{status}</if>
+		</where>
+	</select>
+	
+</mapper>

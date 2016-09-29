@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fdmy.model.EquipmentResume">
+
+	<insert id="add" parameterType="EquipmentResume">
+	INSERT INTO t_equipmentresume
+    (
+    	uuid,
+        productNo,
+        inputName,
+        inputDate,
+        status,
+        principal,
+        address,
+        remark
+    )
+    VALUES
+    (
+    	replace(uuid(),'-',''),
+   		#{productNo},   
+        #{inputName},
+        now(),
+        #{status},
+        #{principal},
+        #{address},
+        #{remark}
+    )
+	</insert>
+	<insert id="addlist" >
+	INSERT INTO t_equipmentresume
+    (
+    	uuid,
+    	productNo,
+        inputName,
+        inputDate,
+        status,
+        principal,
+        address,
+        remark
+    )
+    VALUES
+    <foreach item="item" collection="list" separator=",">
+    (
+    	replace(uuid(),'-',''),
+    	#{item.productNo},   
+        #{item.inputName},
+        now(),
+        #{item.status},
+        #{item.principal},
+        #{item.address},
+        #{item.remark}
+    )
+    </foreach>
+	</insert>
+
+	<update id="update" parameterType="EquipmentResume">
+		update t_equipmentresume
+		<set>
+			productNo =#{productNo},
+			inputName =#{inputName},
+			inputDate = now(),
+			status=#{status},
+			principal=#{principal},
+			address=#{address},
+			remark=#{remark}
+		</set>
+		where uuid = #{uuid}
+	</update>
+
+	
+	<select id="load" parameterType="String" resultType="EquipmentResumeVO">
+		select 
+			 r.uuid,r.productno,r.inputdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
+		 from t_equipmentresume r
+		 inner join t_equipment e 
+		 on 
+		 r.productno = e.productno  and r.uuid = #{uuid} 
+	</select>
+
+	<select id="query" parameterType="EquipmentResumeVO" resultType="EquipmentResumeVO">
+		select 
+			 r.uuid,r.productno,r.inputdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
+		 from t_equipmentresume r,t_equipment e
+		 where r.productno = e.productno
+		<if test="productNo != null"> and r.productNo = #{productNo}	</if>
+		<if test="equipmentName != null"> and e.equipmentname = #{equipmentName}	</if>
+		<if test="inputName != null"> and r.inputname = #{inputName}	</if>
+		<if test="principal != null"> and r.principal = #{principal}	</if>
+		<if test="department != null"> and e.department = #{department}	</if>
+		order by inputDate desc ,uuid
+	</select>
+	
+	<select id="queryWithMultiProductNo" parameterType="EquipmentResume" resultType="EquipmentResumeVO">
+		select 
+			 r.uuid,r.productno,r.inputdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
+		 from t_equipmentresume r,t_equipment e
+		 where r.productno = e.productno
+		<if test="productNo != null"> and r.productNo in (${productNo})	</if>
+		order by inputDate desc ,uuid
+	</select>
+	
+	
+	<select id="queryByProductNo" parameterType="String" resultType="EquipmentResumeVO">
+		select 
+			 r.uuid,r.productno,r.inputdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address
+		 from t_equipmentresume r,t_equipment e
+		 where r.productno = e.productno  and r.productNo = #{productNo}
+		 order by r.inputdate desc,uuid
+	</select>
+	
+</mapper>
