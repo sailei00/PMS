@@ -5,9 +5,11 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.fdmy.model.UtiCode;
 
+@Repository("utiCodeDao")
 public class UtiCodeDao implements IUtiCodeDao {
 	private SqlSessionTemplate sessionTemplate;
 
@@ -22,8 +24,13 @@ public class UtiCodeDao implements IUtiCodeDao {
 	}
 
 	@Override
-	public List<UtiCode> getCodesByType(String codetype) {
-		return sessionTemplate.selectList(UtiCode.class.getName() + ".getCodesByType", codetype);
+	public List<UtiCode> getCodesByCodeType(String codeType) {
+		return sessionTemplate.selectList(UtiCode.class.getName() + ".getCodesByCodeType", codeType);
+	}
+	
+	@Override
+	public List<UtiCode> getCodesByUpperCodeType(UtiCode code){
+		return sessionTemplate.selectList(UtiCode.class.getName() + ".getCodesByUpperCodeType", code);
 	}
 
 }

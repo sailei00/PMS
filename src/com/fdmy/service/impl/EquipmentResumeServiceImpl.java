@@ -38,19 +38,19 @@ public class EquipmentResumeServiceImpl implements IEquipmentResumeService {
 	}
 
 	/*
-	 * 保存设备履历时，同步更新设备信息
+	 * 保存设备履历时，同步更新设备信息中的责任人、使用状态、使用日期、安装地点。
 	 */
 	@Override
 	public void add(EquipmentResume equipmentResume) {
-		Equipment equip = this.equipmentDao.loadByProductNo(equipmentResume.getProductNo());
+		Equipment equip = this.equipmentDao.loadByEquipmentNoInCategory(equipmentResume);
 		if (equip != null) {
 			equip.setPrincipal(equipmentResume.getPrincipal());
 			equip.setStatus(equipmentResume.getStatus());
-			equip.setUseDate(equipmentResume.getInputDate()); // 使用登记日期作为最后一次使用的日期
+			equip.setUseDate(equipmentResume.getOptDate()); // 使用登记日期作为最后一次使用的日期
 			equip.setAddress(equipmentResume.getAddress());
+			equipmentDao.update(equip);
 		}
 		equipmentResumeDao.add(equipmentResume);
-		equipmentDao.update(equip);
 	}
 	
 	@Override

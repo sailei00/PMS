@@ -18,7 +18,7 @@
 					 <a href="/equipmentresume/add">增加设备履历</a>
 				</li>
 				<li id="nav3"  style="visibility: hidden;">
-					 <a href="#">批量添加</a>
+					 <a href="#">快速添加履历</a>
 				</li>
 			</ul>
 		</div>
@@ -30,15 +30,15 @@
 		<div class="row">
 			<div class="col-md-12 column">
 				<form:form method="post"  modelAttribute="equipmentResume"  role="form"  cssClass="form-horizontal" >
-				<form:hidden path="inputDate"/>
+				<form:hidden path="optDate"/>
 					<div class="form-group"> 
-						<label class="control-label col-lg-2" for="productNo">出厂编号：<sup style="color:red">*</sup></label>
+						<label class="control-label col-lg-2" for="equipmentNo">设备编号：<sup style="color:red">*</sup></label>
 						<div class="col-lg-8"  style="padding-right: 50px;">
-							<form:textarea path="productNo" cssClass="form-control" placeholder='编号之间用逗号","分隔，例如：145786,117605,115060,33144'/>
+							<form:textarea path="equipmentNo" cssClass="form-control" placeholder='编号之间用逗号","或空格分隔，例如：145786,117605 115060,33144'/>
 						</div>
 					</div>
 					<div class="form-group" style="display: none;" id="invalidNoGroup">
-						<label class="control-label col-lg-2" for="productNo">异常编号：</label>
+						<label class="control-label col-lg-2" for="invalidNo">异常编号：</label>
 						<div class="col-lg-8 "  >
 							<textarea name="invalidNo"  id="invalidNo" class="form-control" placeholder="这些编号的设备没有登记"></textarea>
 						</div>
@@ -97,7 +97,7 @@ $(function() {
 		autoclose : 1,
 		todayHighlight : 1,
 		startView : 2,
-		minView : 3,
+		minView : 2,
 		forceParse : 0
 	});
 */
@@ -136,27 +136,27 @@ $(function() {
 	$("#equipmentResume").validate({
 		onkeyup:false,
 		rules: {
-				productNo: {
+				equipmentNo: {
 			        required: true,
 			        notBlank : true,
 			        remote: {
-			            url: "/equipmentresume/checkproductexsit",     //后台处理程序
+			            url: "/equipmentresume/checkequipmentexsit",     //后台处理程序
 			            type: "get",               //数据发送方式
 			            dataType: "json",           //接受数据格式   
 			            data: {                     //要传递的数据
-			                productNo: function() {
-			                    return $("#productNo").val();
+			                equipmentNo: function() {
+			                    return $("#equipmentNo").val();
 			                }
 			            },
 			            dataFilter: function (data){           //判断控制器返回的内容
                            	var arr = data.split("|");
-                           	var productNo = arr[0];
+                           	var equipmentNo = arr[0];
                            	var invalidNo = arr[1];
                             if (invalidNo == "") {
                                 return true;
                             }
                             else {
-                            	$("#productNo").val(productNo);
+                            	$("#equipmentNo").val(equipmentNo);
                             	$("#invalidNo").val(invalidNo);
                             	$("#invalidNoGroup").css("display","");
                                 return false;
@@ -173,9 +173,9 @@ $(function() {
 			    }
 		},
 		messages: {
-				productNo: {
-					required:"出厂编号不能为空",
-					noBlank:"出厂编号不能为空",
+				equipmentNo: {
+					required:"设备编号不能为空",
+					noBlank:"设备编号不能为空",
 					remote:"以下设备尚未登记"
 				},
 				inputName: "登记人不能为空",

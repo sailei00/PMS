@@ -59,6 +59,7 @@
 						<div class="col-sm-2">
 							<select name="department" id="department" class="form-control">
 									<option value="">所有部门</option>
+									<option value="安全指挥中心">安全指挥中心</option>
 									<option value="机修厂">机修厂</option>
 									<option value="机电机运队">机电机运队</option>
 									<option value="综掘一队">综掘一队</option>
@@ -73,10 +74,12 @@
 						<div class="col-sm-2">
 							<select name="status" id="status" class="form-control">
 								<option value="">不限</option>
-								<option value="使用">使用</option>
+								<option value="在用">在用</option>
 								<option value="备用">备用</option>
 								<option value="待修">待修</option>
 								<option value="报废">报废</option>
+								<option value="送修">送修</option>
+								<option value="送检">送检</option>
 							</select>
 						</div>
 					</div>

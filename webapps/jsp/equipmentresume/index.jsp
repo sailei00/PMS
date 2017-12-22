@@ -18,7 +18,10 @@
 					 <a href="#">设备履历清单</a>
 				</li>
 				<li>
-					 <a href="add">增加设备履历信息</a>
+					 <a href="add">增加设备履历</a>
+				</li>
+				<li id="nav3" >
+					 <a href="addlist">快速添加履历</a>
 				</li>
 			</ul>
 		</div>
@@ -32,7 +35,7 @@
 					<div class="form-group"> 
 						<label class="control-label col-md-1" for="productNo">出厂编号</label>
 						<div class="col-md-2">
-							<input	type="text" class="form-control" id="productNo"  name="productNo"/>
+							<input	type="text" class="form-control" id="productNo"  name="productNo" placeholder='例如:0116, 4849,6352'/>
 						</div>
 						<label class="control-label col-md-1" for="equipmentName">设备名称</label>
 						<div class="col-md-2">
@@ -86,7 +89,7 @@
 				<thead>
 					<tr>
 						<td colspan="11" align="center">
-							<pg:param name="inputDate"/>
+							<pg:param name="optDate"/>
 							<pg:param name="productNo"/>
 							<pg:param name="inputName"/>
 							<pg:param name="principal"/>
@@ -122,24 +125,24 @@
 						<td align="center">出厂编号</td>
 						<td align="center">登记日期</td>
 						<td align="center">登记人</td>
-						<td align="center">包机人</td>
 						<td align="center">设备名称</td>
 						<td align="center">设备状态</td>
 						<td align="center">使用部门</td>
 						<td align="center">使用地点</td>
+						<td align="center">备注</td>
 					</tr>
 					</thead>
 						<c:forEach items="${equipmentResumeList}" var="it" varStatus="status">
 							<tr class="${it.remark=='temp'?'danger':''}" >
 								<td align="center">${(currPageNo-1) * pageInfo.pageSize + status.index  + 1}</td>
 								<td align="center"><a href="${it.uuid}/update">${it.productNo}</a></td>
-								<td align="center"><fmt:formatDate value="${it.inputDate}" pattern="yyyy-MM-dd"/></td>
+								<td align="center"><fmt:formatDate value="${it.optDate}" pattern="yyyy-MM-dd"/></td>
 								<td align="center">${it.inputName} </td>
-								<td align="center">${it.principal}</td>
 								<td align="center">${it.equipmentName} </td>
 								<td align="center">${it.status}</td>
 								<td align="center">${it.department}</td>
 								<td align="center">${it.address}</td>
+								<td align="center">${it.remark}</td>
 						</c:forEach>
 				</table>
 		</pg:pager>

@@ -7,7 +7,12 @@
 		select * from UtiCode where codeType = #{codeType} and codeCode = #{codeCode}
 	</select>
 
-	<select id="getCodesByType" parameterType="String" resultType="UtiCode">
+	<select id="getCodesByCodeType" parameterType="String" resultType="UtiCode">
 		select * from UtiCode where codeType = #{codeType}
 	</select>
+	
+	<select id="getCodesByUpperCodeType" parameterType="UtiCode" resultType="UtiCode">
+		select * from UtiCode where codeType = #{codeType} and uppercodetype = #{upperCodeType} and uppercodecode = #{upperCodeCode}
+	</select>
+	
 </mapper>

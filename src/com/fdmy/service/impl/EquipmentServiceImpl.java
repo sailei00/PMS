@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fdmy.dao.IEquipmentDao;
 import com.fdmy.model.Equipment;
+import com.fdmy.model.StatisticsVO;
 import com.fdmy.service.IEquipmentService;
 
 @Service("equipmentService")
@@ -43,20 +44,30 @@ public class EquipmentServiceImpl implements IEquipmentService {
 	public Equipment load(String id) {
 		return equipmentDao.load(id);
 	}
-	
+
 	@Override
-	public Equipment loadByEquipmentNo(String equipmentNo) {
+	public List<Equipment> loadByEquipmentNo(String equipmentNo) {
 		return equipmentDao.loadByEquipmentNo(equipmentNo);
 	}
-	
+
 	@Override
-	public Equipment loadByProductNo(String productNo) {
-		return equipmentDao.loadByProductNo(productNo);
+	public Equipment loadByEquipmentNoInCategory(Equipment paramEquip) {
+		return equipmentDao.loadByEquipmentNoInCategory(paramEquip);
+	}
+
+	@Override
+	public List<Equipment> queryByProductNo(String productNo) {
+		return equipmentDao.queryByProductNo(productNo);
 	}
 
 	@Override
 	public List<Equipment> query(Equipment equipment) {
 		return equipmentDao.query(equipment);
+	}
+
+	@Override
+	public List<StatisticsVO> statistics(String department) {
+		return equipmentDao.statistics(department);
 	}
 
 }

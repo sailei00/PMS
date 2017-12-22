@@ -3,6 +3,7 @@ package com.fdmy.service;
 import java.util.List;
 
 import com.fdmy.model.Equipment;
+import com.fdmy.model.StatisticsVO;
 
 public interface IEquipmentService {
 
@@ -14,10 +15,15 @@ public interface IEquipmentService {
 
 	public Equipment load(String uuid);
 
-	public Equipment loadByEquipmentNo(String equipmentNo);
+	public List<Equipment> loadByEquipmentNo(String equipmentNo);	
 
 	public List<Equipment> query(Equipment equipment);
 
-	public Equipment loadByProductNo(String productNo);
+	public List<Equipment> queryByProductNo(String productNo);
+
+	public List<StatisticsVO> statistics(String equipmentName);
+
+	public Equipment loadByEquipmentNoInCategory(Equipment paramEquip);
+
 
 }

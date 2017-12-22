@@ -61,8 +61,8 @@
 				<div class="form-group"> 
 					<label class="control-label col-lg-2" for="type">单据类型：</label>
 					<div class="col-lg-4" >
-						<c:if test="${account.type==0}"><input class="form-control"  value="出库" readonly="true"/><form:hidden path="type"  value="0" /></c:if>
-						<c:if test="${account.type==1}"><input class="form-control"  value="入库" readonly="true"/><form:hidden path="type"  value="1" /></c:if>
+						<c:if test="${account.type==0}"><input class="form-control"  value="出库" readonly/><form:hidden path="type"  value="0" /></c:if>
+						<c:if test="${account.type==1}"><input class="form-control"  value="入库" readonly/><form:hidden path="type"  value="1" /></c:if>
 					</div>
 					<label class="control-label col-lg-2" for="item.code">物料编码：<sup style="color:red">*</sup></label>
 					<div class="col-lg-4" >
@@ -75,7 +75,10 @@
 				<div class="form-group"> 
 					<label class="control-label col-lg-2" for="item.name">物料名称：<sup style="color:red">*</sup></label>
 					<div class="col-lg-4" >
-						<form:input path="item.name" cssClass="form-control"  />
+						<div class=" input-group" >
+							<form:input path="item.name" cssClass="form-control"  />
+							<span class="input-group-addon" style="cursor: pointer;" data-backdrop="static"  data-toggle="modal" data-target="#itemSearch" onclick="showSearchPage()"><span class="glyphicon glyphicon-search"></span></span>
+						</div>
 					</div>
 					<label class="control-label col-lg-2" for="item.model">型号：</label>
 					<div class="col-lg-4" >
@@ -214,7 +217,7 @@ $(function() {
 		autoclose: 1,
 		todayHighlight: 1,
 		startView: 2,
-		minView: 3,
+		minView: 2,
 		forceParse: 0
     });
 	

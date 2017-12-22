@@ -83,10 +83,9 @@ public class EquipmentResumeController {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("loginuser");
 		EquipmentResumeVO equipmentResume = new EquipmentResumeVO();
-		equipmentResume.setInputDate(Calendar.getInstance().getTime());
+		equipmentResume.setOptDate(Calendar.getInstance().getTime());
 		if (user != null) {
 			equipmentResume.setInputName(user.getUsername());
-			equipmentResume.setInputDate(Calendar.getInstance().getTime());
 		}
 		model.addAttribute("equipmentResume", equipmentResume);
 		return "/equipmentresume/equipmentresumepage";
@@ -112,18 +111,18 @@ public class EquipmentResumeController {
 		return "redirect:/equipmentresume/query?uuid=" + uuid;
 	}
 
-	// 根据设备出厂编号带出相关设备信息，在填写出厂编号后用
+	// 根据出厂编号带出相关设备信息
 	@RequestMapping(value = "/getequipmentinfo", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
 	@ResponseBody
-	public String getequipmentinfo(String productNo) throws Exception {
+	public String getEquipmentInfo(String productNo) throws Exception {
 		Gson gson = new Gson();
-		Equipment equipment = equipmentService.loadByProductNo(productNo);
+		List<Equipment> equipment = equipmentService.loadByEquipmentNo(productNo);
 		String result = gson.toJson(equipment);
 		return result;
 	}
 
 	// 查询指定出厂编号是否存在，多个编号之间用逗号分隔
-	@RequestMapping(value = "/checkproductexsit", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+	@RequestMapping(value = "/checkequipmentexsit", method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
 	@ResponseBody
 	public String checkProductNoExsit(String productNo) throws Exception {
 		productNo += ",";
@@ -131,31 +130,32 @@ public class EquipmentResumeController {
 		// 把出厂编号用逗号分隔开，拆分成单个的编号
 		String[] productNoArr = productNo.split(",");
 		List<String> productNoList = Arrays.asList(productNoArr);
-		Equipment equipment = null;
-		String result = "";
+		List<Equipment> equipment = null;
+		String invalidNo = "";
+		// 对填写的设备编号列表进行循环校验
 		for (String no : productNoList) {
 			equipment = null;
-			equipment = equipmentService.loadByProductNo(no);
-			if (equipment == null) {
+			equipment = equipmentService.loadByEquipmentNo(no);
+			if (equipment.size() <= 0) { // 如果设备编号不存在，从字符串中去掉该编号，合并到invalidNo中
 				productNo = productNo.replaceAll(no + ",", "");
-				result = result + no + ",";
+				invalidNo = invalidNo + no + ",";
 			}
 		}
-		if (productNo.indexOf(",") > 0) {
+		if (productNo.indexOf(",") > 0) { // 如果设备编号字符串有逗号，则去掉最后一位的逗号
 			productNo = productNo.substring(0, productNo.length() - 1);
 		}
-		if (result.indexOf(",") > 0) {
-			result = result.substring(0, result.length() - 1);
+		if (invalidNo.indexOf(",") > 0) { // 如果异常编号字符串中有逗号，则去掉最后一位的逗号
+			invalidNo = invalidNo.substring(0, invalidNo.length() - 1);
 		}
-		return productNo + "|" + result;
+		return productNo + "|" + invalidNo; // 返回 : 正常编号|异常编号
 	}
 
 	@RequestMapping(value = "/validation", method = RequestMethod.GET)
 	@ResponseBody
 	public String validate(EquipmentResume equipmentResume, String action) throws Exception {
 		if (equipmentResume.getProductNo() != null) {
-			Equipment equip = this.equipmentService.loadByProductNo(equipmentResume.getProductNo());
-			if (equip != null) {
+			List<Equipment> equip = this.equipmentService.loadByEquipmentNo(equipmentResume.getProductNo());
+			if (equip.size() > 0) {
 				return "true";
 			} else {
 				return "false";
@@ -169,40 +169,40 @@ public class EquipmentResumeController {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("loginuser");
 		EquipmentResumeVO equipmentResume = new EquipmentResumeVO();
-		equipmentResume.setInputDate(Calendar.getInstance().getTime());
+		equipmentResume.setOptDate(Calendar.getInstance().getTime());
 		if (user != null) {
 			equipmentResume.setInputName(user.getUsername());
-			equipmentResume.setInputDate(Calendar.getInstance().getTime());
 		}
 		model.addAttribute("equipmentResume", equipmentResume);
 		return "/equipmentresume/addlistpage";
 	}
 
 	@RequestMapping(value = "/addlist", method = RequestMethod.POST)
-	public String addList(EquipmentResume param, String invalidNo,Model model) {
+	public String addList(EquipmentResume param, String invalidNo, Model model) {
 		String productNo = param.getProductNo();
 		productNo = productNo.trim().replaceAll("[,	， ]+", ","); // 删除首尾空格，把中英文的逗号、空格、TAB替换为英文逗号
 		// 把出厂编号用逗号分隔开，拆分成单个的编号
 		String[] productNoArr = productNo.split(",");
 		List<String> productNoList = Arrays.asList(productNoArr);
-		// 每个出厂编号封装一个resume对象，inputDate是当前时间，责任人principal是null，address为null，remark为temp
+		// 每个出厂编号封装一个resume对象，optDate是当前时间，责任人principal是null，address为null，remark为temp
 		List<EquipmentResume> pojoList = new ArrayList<EquipmentResume>();
 		for (String no : productNoList) {
 			EquipmentResume pojo = new EquipmentResume();
 			pojo.setProductNo(no);
 			pojo.setInputName(param.getInputName());
+			pojo.setOptDate(Calendar.getInstance().getTime());
 			pojo.setStatus(param.getStatus());
 			pojo.setPrincipal(null);
 			pojo.setAddress(null);
-			pojo.setRemark(SystemContext.TEMPFLAG);		// 快速添加的临时数据的常量标记
+			pojo.setRemark(SystemContext.TEMPFLAG); // 快速添加的临时数据的常量标记
 			pojoList.add(pojo);
 		}
 		this.equipmentResumeService.addList(pojoList);
 		String message = "成功添加设备编号为：" + param.getProductNo() + "的履历。";
-		if (!"".equals(invalidNo) && invalidNo!= null) {
-			message = message + "<br>" + "编号为：" + invalidNo +"的设备没有登记设备信息";
+		if (!"".equals(invalidNo) && invalidNo != null) {
+			message = message + "<br>" + "编号为：" + invalidNo + "的设备没有登记设备信息";
 		}
-		model.addAttribute("message",message);
+		model.addAttribute("message", message);
 		return "redirect:/equipmentresume/query?productNo=" + param.getProductNo();
 	}
 }

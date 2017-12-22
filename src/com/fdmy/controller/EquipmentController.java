@@ -1,11 +1,13 @@
 package com.fdmy.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,20 +18,26 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fdmy.model.Equipment;
 import com.fdmy.model.EquipmentResume;
+import com.fdmy.model.StatisticsVO;
+import com.fdmy.model.User;
+import com.fdmy.model.UtiCode;
 import com.fdmy.model.ValidationInfo;
 import com.fdmy.service.IEquipmentResumeService;
 import com.fdmy.service.IEquipmentService;
+import com.fdmy.service.IUtiCodeService;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 
 /*
- * 文档管理控制器
+ * 设备管理控制器
  */
 @Controller("equipmentController")
 @RequestMapping("/equipment")
 public class EquipmentController {
 	private IEquipmentService equipmentService;
 	private IEquipmentResumeService equipmentResumeService;
+	private IUtiCodeService utiCodeService;
+	
 
 	public IEquipmentResumeService getEquipmentResumeService() {
 		return equipmentResumeService;
@@ -47,6 +55,15 @@ public class EquipmentController {
 	@Resource
 	public void setEquipmentService(IEquipmentService equipmentService) {
 		this.equipmentService = equipmentService;
+	}
+
+	public IUtiCodeService getUtiCodeService() {
+		return utiCodeService;
+	}
+
+	@Resource
+	public void setUtiCodeService(IUtiCodeService utiCodeService) {
+		this.utiCodeService = utiCodeService;
 	}
 
 	public EquipmentController() {
@@ -72,6 +89,9 @@ public class EquipmentController {
 	public String toAdd(Model model) {
 		Equipment equipment = new Equipment();
 		equipment.setInputDate(Calendar.getInstance().getTime());
+		List<UtiCode> categoryList = new ArrayList<UtiCode>();
+		categoryList = utiCodeService.getCodesByCodeType("category");
+		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("equipment", equipment);
 		return "/equipment/equipmentpage";
 	}
@@ -89,6 +109,16 @@ public class EquipmentController {
 		equipment.setInputDate(Calendar.getInstance().getTime());
 		List<EquipmentResume> list = equipmentResumeService.queryByProductNo(equipment.getProductNo());
 		PageInfo<EquipmentResume> page = new PageInfo<EquipmentResume>(list);
+		List<UtiCode> categoryList = new ArrayList<UtiCode>();
+		categoryList = utiCodeService.getCodesByCodeType("category");
+		List<UtiCode> equipmentNameList = new ArrayList<UtiCode>();
+		UtiCode code = new UtiCode();
+		code.setCodeType("equipmentname");
+		code.setUpperCodeType("category");
+		code.setUpperCodeCode(equipment.getCategory());
+		equipmentNameList = utiCodeService.getCodesByUpperCodeType(code);
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("equipmentNameList", equipmentNameList);
 		model.addAttribute("equipmentResumeList", list);
 		model.addAttribute("pageInfo", page);
 		model.addAttribute("equipment", equipment);
@@ -105,50 +135,72 @@ public class EquipmentController {
 
 	@RequestMapping(value = "/validation", method = RequestMethod.GET)
 	@ResponseBody
-	public String validate(Equipment equipment, String action) throws Exception {
+	public String validate(Equipment paramEquip, String action) throws Exception {
 		Gson gson = new Gson();
 		ValidationInfo info = new ValidationInfo();
-		System.out.println("验证对象：" + equipment);
-		if (equipment.getEquipmentNo() != null) {
-			Equipment equip = this.equipmentService.loadByEquipmentNo(equipment.getEquipmentNo());
-			if (action.equals("update")) {
-				Equipment oldEquip = this.equipmentService.load(equipment.getId());
-				if (equipment.getEquipmentNo().equals(oldEquip.getEquipmentNo())) {
+		System.out.println("验证对象：" + paramEquip);
+		if (paramEquip.getEquipmentNo() != null) {
+			Equipment equip = this.equipmentService.loadByEquipmentNoInCategory(paramEquip);		//查找同设备类型、设备名称中是否有重复设备编码
+			if (action.equals("update")) {		//如果是修改记录
+				Equipment oldEquip = this.equipmentService.load(paramEquip.getId());			//取原数据
+				if (paramEquip.getEquipmentNo().equals(oldEquip.getEquipmentNo())) {			//如果设备编号没有变更，直接通过验证
 					info.setValid(true);
-				} else if (equip == null) {
+				} else if (equip == null) {					//设备编号有变更，并且同设备类型、设备名称中没有重复设备编码
 					info.setValid(true);
-				} else {
+				} else {												//设备编号有变更，且变更后的编号被使用
 					info.setValid(false);
 				}
-			} else {
-				if (equip != null) {
+			} else {										//如果是新增记录
+				if (equip != null) {					//如果同设备类型、设备名称中存在该设备编码
 					info.setValid(false);
-				} else {
+				} else {									//同设备类型、设备名称中没有重复设备编码
 					info.setValid(true);
 				}
 			}
 		}
-		if (equipment.getProductNo() != null) {
-			Equipment equip = this.equipmentService.loadByProductNo(equipment.getProductNo());
-			if (action.equals("update")) {
-				Equipment oldEquip = this.equipmentService.load(equipment.getId());
-				if (equipment.getProductNo().equals(oldEquip.getProductNo())) {
-					info.setValid(true);
-				} else if (equip == null) {
-					info.setValid(true);
-				} else {
-					info.setValid(false);
-				}
-			} else {
-				if (equip != null) {
-					info.setValid(false);
-				} else {
-					info.setValid(true);
-				}
-			}
-
-		}
+//		if (paramEquip.getProductNo() != null) {
+//			Equipment equip = this.equipmentService.loadByProductNo(paramEquip.getProductNo());
+//			if (action.equals("update")) {
+//				Equipment oldEquip = this.equipmentService.load(paramEquip.getId());
+//				if (paramEquip.getProductNo().equals(oldEquip.getProductNo())) {
+//					info.setValid(true);
+//				} else if (equip == null) {
+//					info.setValid(true);
+//				} else {
+//					info.setValid(false);
+//				}
+//			} else {
+//				if (equip != null) {
+//					info.setValid(false);
+//				} else {
+//					info.setValid(true);
+//				}
+//			}
+//
+//		}
 		return gson.toJson(info);
 	}
 
+	@RequestMapping(value = "/statistics", method = RequestMethod.GET)
+	public String statistics(HttpServletRequest request, Model model) throws Exception {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("loginuser");
+		List<StatisticsVO> statisticsList= equipmentService.statistics(user.getDepartment());
+		model.addAttribute("statisticsList", statisticsList);
+		return "/equipment/statistics";
+	}
+	
+	
+	@RequestMapping(value = "/getequipmentnamelist", method = RequestMethod.POST, produces = { "application/json;charset=UTF-8" })
+	@ResponseBody
+	public String getEquipmentNameList(String upperCodeCode) throws Exception { 
+		Gson gson = new Gson();
+		List<UtiCode> equipmentNameList = new ArrayList<UtiCode>();
+		UtiCode code = new UtiCode();
+		code.setCodeType("equipmentname");
+		code.setUpperCodeType("category");
+		code.setUpperCodeCode(upperCodeCode);
+		equipmentNameList = utiCodeService.getCodesByUpperCodeType(code);
+		return gson.toJson(equipmentNameList);
+	}
 }

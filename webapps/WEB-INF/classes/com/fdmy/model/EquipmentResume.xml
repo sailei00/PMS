@@ -10,6 +10,7 @@
         productNo,
         inputName,
         inputDate,
+        optDate,
         status,
         principal,
         address,
@@ -21,6 +22,7 @@
    		#{productNo},   
         #{inputName},
         now(),
+        #{optDate},
         #{status},
         #{principal},
         #{address},
@@ -34,6 +36,7 @@
     	productNo,
         inputName,
         inputDate,
+        optDate,
         status,
         principal,
         address,
@@ -46,6 +49,7 @@
     	#{item.productNo},   
         #{item.inputName},
         now(),
+        #{item.optDate},
         #{item.status},
         #{item.principal},
         #{item.address},
@@ -60,6 +64,7 @@
 			productNo =#{productNo},
 			inputName =#{inputName},
 			inputDate = now(),
+			optDate = #{optDate},
 			status=#{status},
 			principal=#{principal},
 			address=#{address},
@@ -71,7 +76,7 @@
 	
 	<select id="load" parameterType="String" resultType="EquipmentResumeVO">
 		select 
-			 r.uuid,r.productno,r.inputdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
+			 r.uuid,r.productno,r.optdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
 		 from t_equipmentresume r
 		 inner join t_equipment e 
 		 on 
@@ -80,33 +85,33 @@
 
 	<select id="query" parameterType="EquipmentResumeVO" resultType="EquipmentResumeVO">
 		select 
-			 r.uuid,r.productno,r.inputdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
+			 r.uuid,r.productno,r.optdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
 		 from t_equipmentresume r,t_equipment e
 		 where r.productno = e.productno
 		<if test="productNo != null"> and r.productNo = #{productNo}	</if>
-		<if test="equipmentName != null"> and e.equipmentname = #{equipmentName}	</if>
+		<if test="equipmentName != null"> and e.equipmentName like '%${equipmentName}%'	</if>
 		<if test="inputName != null"> and r.inputname = #{inputName}	</if>
 		<if test="principal != null"> and r.principal = #{principal}	</if>
 		<if test="department != null"> and e.department = #{department}	</if>
-		order by inputDate desc ,uuid
+		order by r.optdate desc ,uuid
 	</select>
 	
 	<select id="queryWithMultiProductNo" parameterType="EquipmentResume" resultType="EquipmentResumeVO">
 		select 
-			 r.uuid,r.productno,r.inputdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
+			 r.uuid,r.productno,r.optdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address,r.remark
 		 from t_equipmentresume r,t_equipment e
 		 where r.productno = e.productno
 		<if test="productNo != null"> and r.productNo in (${productNo})	</if>
-		order by inputDate desc ,uuid
+		order by optdate desc ,uuid
 	</select>
 	
 	
 	<select id="queryByProductNo" parameterType="String" resultType="EquipmentResumeVO">
 		select 
-			 r.uuid,r.productno,r.inputdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address
+			 r.uuid,r.productno,r.optdate,r.inputname,r.principal,e.equipmentname,r.status,e.department,r.address
 		 from t_equipmentresume r,t_equipment e
 		 where r.productno = e.productno  and r.productNo = #{productNo}
-		 order by r.inputdate desc,uuid
+		 order by r.optdate desc,uuid
 	</select>
 	
 </mapper>

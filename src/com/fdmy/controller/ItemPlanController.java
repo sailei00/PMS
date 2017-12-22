@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.fdmy.model.ItemPlan;
 import com.fdmy.model.User;
 import com.fdmy.service.IItemPlanService;
+import com.github.pagehelper.PageInfo;
 
 @Controller("itemPlanController")
 @RequestMapping("/itemplan")
@@ -46,41 +47,41 @@ public class ItemPlanController {
 		// 利用搜索对象查询结果
 		List<ItemPlan> list = new ArrayList<ItemPlan>();
 		list = itemPlanService.query(itemPlanBean);
-
-//		model.addAttribute("itemQueryBean", itemQueryBean);
+		PageInfo<ItemPlan> page = new PageInfo<ItemPlan>(list);
+		// model.addAttribute("itemQueryBean", itemQueryBean);
+		model.addAttribute("pageInfo", page);
 		model.addAttribute("itemplanlist", list);
 		return "/itemplan/itemplanindex";
 	}
-	
+
 	@RequestMapping(value = "/load", method = RequestMethod.GET)
-	public String load(String  id, Model model) throws Exception {
+	public String load(String id, Model model) throws Exception {
 		// 根据id查询指定对象
 		List<ItemPlan> list = new ArrayList<ItemPlan>();
 		ItemPlan plan = itemPlanService.load(id);
 		list.add(plan);
-//		model.addAttribute("itemQueryBean", itemQueryBean);
+		// model.addAttribute("itemQueryBean", itemQueryBean);
 		model.addAttribute("itemplanlist", list);
 		return "/itemplan/itemplanindex";
 	}
 
-	
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String toAdd(HttpServletRequest request,Model model) {
+	public String toAdd(HttpServletRequest request, Model model) {
 		ItemPlan itemPlan = new ItemPlan();
-		//设置计划月份为当前月
+		// 设置计划月份为当前月
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-		itemPlan.setPlanMonth(sdf.format(Calendar.getInstance().getTime()));	
+		itemPlan.setPlanMonth(sdf.format(Calendar.getInstance().getTime()));
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("loginuser");
-		//设置归属部门
+		// 设置归属部门
 		itemPlan.setDepartment(user.getDepartment());
 		model.addAttribute("itemPlan", itemPlan);
 		return "/itemplan/itemplanpage";
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String add(@Valid ItemPlan itemplan,BindingResult br,Model model) throws Exception {
-		if(br.hasErrors()){
+	public String add(@Valid ItemPlan itemplan, BindingResult br, Model model) throws Exception {
+		if (br.hasErrors()) {
 			List<ObjectError> errorList = br.getAllErrors();
 			for (ObjectError error : errorList) {
 				System.out.println(error.getDefaultMessage());
@@ -98,9 +99,9 @@ public class ItemPlanController {
 		return "/itemplan/itemplanpage";
 	}
 
-	//RequestMapping的value中指定的id参数，可以当作表单中传递的值对待，此处自动赋值到plan对象中的id字段
+	// RequestMapping的value中指定的id参数，可以当作表单中传递的值对待，此处自动赋值到plan对象中的id字段
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST)
-	public String update(@PathVariable String id,ItemPlan plan) throws Exception {
+	public String update(@PathVariable String id, ItemPlan plan) throws Exception {
 		itemPlanService.update(plan);
 		return "redirect:/itemplan/load?id=" + plan.getId();
 	}

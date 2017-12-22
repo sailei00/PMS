@@ -141,6 +141,7 @@
 						<li><a href="/equipment/index" >机电设备管理</a></li>
 						<li><a href="/equipmentresume/index" >设备履历信息 </a></li>
 						<li><a href="/equipmentresume/addlist" >快速添加设备履历 </a></li>
+						<li><a href="/equipment/statistics" >设备统计 </a></li>
 					</ul>
 				</li>
 			</ul>

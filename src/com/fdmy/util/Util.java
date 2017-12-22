@@ -11,7 +11,7 @@ public class Util {
 	/*
 	 * 利用反射机制，获取任意POJO对象的public字段和字段的非空值 并将其拼接为查询数据库的条件sql
 	 * 
-	 * 改方法输出的sql为精确查询sql
+	 * 该方法输出的sql为精确查询sql
 	 * 
 	 * @author wulei
 	 * 
@@ -40,7 +40,7 @@ public class Util {
 					}
 				}
 			}
-			// SQL以；结尾，增加where 关键字
+			// SQL以;结尾，增加where 关键字
 			if (!"".equals(con_sql)) {
 				con_sql = " where " + con_sql + ";";
 			} else {
@@ -51,5 +51,21 @@ public class Util {
 		}
 		System.out.println(o.getClass() + "的拼接查询sql为：" + con_sql);
 		return con_sql;
+	}
+	
+	
+	/*
+	 * 
+	 * 删除字符串首尾空格，若字符串为空则返回null
+	 * 一般使用在setter方法中
+	 * @author wulei
+	 * 
+	 * @prarm o :
+	 */
+	public static String trim(String field) {
+		if ("".equals(field)) {
+			return null;
+		}
+		return field.trim();
 	}
 }

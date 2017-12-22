@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.fdmy.model.ItemPlan;
+import com.fdmy.util.SystemContext;
+import com.github.pagehelper.PageHelper;
 
 @Repository("itemPlanDao")
 public class ItemPlanDao extends BaseDao<ItemPlan> implements IItemPlanDao {
@@ -42,6 +44,9 @@ public class ItemPlanDao extends BaseDao<ItemPlan> implements IItemPlanDao {
 
 	@Override
 	public List<ItemPlan> query(ItemPlan itemPlan) {
+		int pageSize = SystemContext.getPageSize();
+		int pageNo = SystemContext.getPageNo();
+		PageHelper.startPage(pageNo, pageSize);
 		List<ItemPlan> list = super.query(ItemPlan.class, itemPlan);
 		return list;
 	}

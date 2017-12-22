@@ -2,6 +2,8 @@ package com.fdmy.model;
 
 import java.util.Date;
 
+import com.fdmy.util.Util;
+
 public class Equipment {
 	private String id; // id
 	private String equipmentNo; // 设备编号
@@ -52,7 +54,7 @@ public class Equipment {
 	}
 
 	public void setEquipmentNo(String equipmentNo) {
-		this.equipmentNo = killBlank(equipmentNo);
+		this.equipmentNo = Util.trim(equipmentNo);
 	}
 
 	public String getEquipmentName() {
@@ -60,7 +62,7 @@ public class Equipment {
 	}
 
 	public void setEquipmentName(String equipmentName) {
-		this.equipmentName = killBlank(equipmentName);
+		this.equipmentName = Util.trim(equipmentName);
 	}
 
 	public String getCategory() {
@@ -68,7 +70,7 @@ public class Equipment {
 	}
 
 	public void setCategory(String equipmentCategory) {
-		this.category = killBlank(equipmentCategory);
+		this.category = Util.trim(equipmentCategory);
 	}
 
 	public String getModel() {
@@ -76,7 +78,7 @@ public class Equipment {
 	}
 
 	public void setModel(String model) {
-		this.model = killBlank(model);
+		this.model = Util.trim(model);
 	}
 
 	public String getStatus() {
@@ -92,7 +94,7 @@ public class Equipment {
 	}
 
 	public void setFactory(String factory) {
-		this.factory = killBlank(factory);
+		this.factory = Util.trim(factory);
 	}
 
 	public String getTechFeature() {
@@ -100,7 +102,7 @@ public class Equipment {
 	}
 
 	public void setTechFeature(String techFeature) {
-		this.techFeature = killBlank(techFeature);
+		this.techFeature = Util.trim(techFeature);
 	}
 
 	public String getUnit() {
@@ -124,7 +126,7 @@ public class Equipment {
 	}
 
 	public void setProductNo(String productNo) {
-		this.productNo = killBlank(productNo);
+		this.productNo = Util.trim(productNo);
 	}
 
 	public Date getProductDate() {
@@ -172,15 +174,9 @@ public class Equipment {
 	}
 
 	public void setDepartment(String department) {
-		this.department = killBlank(department);
+		this.department = Util.trim(department);
 	}
 
-	private String killBlank(String field) {
-		if ("".equals(field)) {
-			return null;
-		}
-		return field;
-	}
 
 	@Override
 	public String toString() {

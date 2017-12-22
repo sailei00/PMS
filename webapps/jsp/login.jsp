@@ -117,29 +117,30 @@ button, input, select,label,img,p{ vertical-align:middle;}
         }
         .login_btn
         {
-        	background: url(/images/login_button.gif) no-repeat ;
-        	height: 33px;
-    		width: 101px;
+        	background: url(/images/login_button.gif) no-repeat ;			/*使用图片来作为按钮的背景*/
+        	height: 33px;       /*设置按钮高度*/
+    		width: 101px;      /*设置按钮宽度*/
+    		cursor:pointer;    /*设置鼠标移动到按钮上的图标*/
         }
         
         .inputtext_login 
         {
-		    background: #fff;
-		    border: 1px #a39797 solid;
-		    height: 25px;
-		    line-height: 25px;
-		    padding: 2px 5px;
-		    font-size: 14px;
+		    background: #fff;			/*设置背景颜色为白色*/
+		    border: 1px #a39797 solid;     /*设置边框宽度 */
+		    height: 25px;                /*设置文本框高度 */
+		    padding: 2px 5px;         /*设置文本框内间距 */
+		    font-size: 14px;            /*设置字体大小 */
+		    width: 210px;               /*设置文本框宽度 */
 		}
 		
 		.inputtext_pwd 
 		{
-		    background: #beb9b9;
-		    border: 1px #a39797 solid;
-		    height: 25px;
-		    line-height: 25px;
-		    padding: 2px 5px;
-		    font-size: 14px;
+		    background: #beb9b9;           /*设置背景颜色为白色*/
+		    border: 1px #a39797 solid;    /*设置边框宽度 */
+		    height: 25px;                        /*设置文本框高度 */
+		    padding: 2px 5px;                 /*设置文本框内间距 */
+		    font-size: 14px;                    /*设置字体大小 */
+		    width: 210px;                       /*设置文本框宽度 */
 		}
 
 </style>
@@ -156,18 +157,19 @@ button, input, select,label,img,p{ vertical-align:middle;}
                     <li style="margin-bottom: 15px;">
                         <h5>
                             用户名</h5>
-                        <input class="inputtext_login" id="txt_uname"  name="usercode" type="text" style="width: 210px;" />
+                        <input class="inputtext_login"  name="usercode" type="text" />  
                     </li>
                     <li style="margin-bottom: 18px;">
                         <h5>
                             密 码</h5>
-                        <input class="inputtext_pwd" id="txt_pwd"  name="password"  type="password" style="width: 210px;" />
+                        <input class="inputtext_pwd"  name="password"  type="password" />
                         <div style="*margin-top: 5px!important; margin: 8px 0 0 60px; width: 220px;">
                          </div>
                     </li>
                     <li>
                         <div style="margin: 0 auto; width: 105px;">
-                            <input class="login_btn" style="cursor:pointer;" type="submit"  value="" id="btn_login" /></div>
+                            <input class="login_btn" type="submit"  value="" />
+                        </div>
                     </li>
                 </ul>
             	</form>

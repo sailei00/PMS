@@ -3,3 +3,4 @@
 		配置URIEncoding="UTF-8"，否则get方式的请求中的中文会有乱码
 3、部署应用时要修改jdbc.properties中的数据库信息
 4、数据库使用mysql-installer-community-5.6.28.0，5.7.x版本在windows server 2008下安装会报错。
+5、使用jre版本为：

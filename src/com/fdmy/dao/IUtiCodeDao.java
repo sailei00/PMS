@@ -14,5 +14,7 @@ public interface IUtiCodeDao {
 
 	public UtiCode load(UtiCode code);
 
-	public List<UtiCode> getCodesByType(String codetype);
+	public List<UtiCode> getCodesByCodeType(String codeType);
+	
+	public List<UtiCode> getCodesByUpperCodeType(UtiCode code);
 }

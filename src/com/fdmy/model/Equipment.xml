@@ -87,7 +87,11 @@
 		select *	from t_equipment where equipmentNo = #{equipmentNo} 
 	</select>
 	
-	<select id="loadByProductNo" parameterType="String" resultType="Equipment">
+	<select id="loadByProductNoInCategory" parameterType="Equipment" resultType="Equipment">
+		select *	from t_equipment where productNo = #{productNo} and category = #{category} and equipmentName = #{equipmentName} 
+	</select>
+	
+	<select id="queryByProductNo" parameterType="String" resultType="Equipment">
 		select *	from t_equipment where productNo = #{productNo} 
 	</select>
 
@@ -97,12 +101,40 @@
 			<if test="equipmentNo != null"> and equipmentNo = #{equipmentNo}	</if>
 			<if test="equipmentName != null"> and equipmentName like '%${equipmentName}%'	</if>
 			<if test="model != null"> and model like '%${model}%'	</if>
-			<if test="category != null"> and category like '%${catetory}%'	</if>
+			<if test="category != null"> and category like '%${category}%'	</if>
 			<if test="productNo != null"> and productNo = #{productNo}	</if>
-			<if test="factory != null"> and factory = #{factory}	</if>
+			<if test="factory != null"> and factory like '%${factory}%'	</if>
 			<if test="department != null"> and department = #{department}</if>
 			<if test="status != null"> and status = #{status}</if>
 		</where>
+	</select>
+	
+	
+	<select id="statistics" parameterType="String" resultType="statisticsVO">
+		select equipmentname,
+		sum(case when status='在用' then 1 else 0 end) as 'used' ,
+		sum(case when status='备用' then 1 else 0 end) as 'notUsed' ,
+		sum(case when status='送检' then 1 else 0 end) as 'test' ,
+		sum(case when status='待修' then 1 else 0 end) as 'broken' ,
+		sum(case when status='送修' then 1 else 0 end) as 'repairing' ,
+		sum(case when status='报废' then 1 else 0 end) as 'scrap' ,
+		count(equipmentname) as 'total'
+		from t_equipment
+		where department = #{department}
+		group by equipmentname
+		
+		union 
+		
+		select '合计',
+		sum(case when status='在用' then 1 else 0 end) as 'used',
+		sum(case when status='备用' then 1 else 0 end) as 'notUsed' , 
+		sum(case when status='送检' then 1 else 0 end) as 'test' , 
+		sum(case when status='待修' then 1 else 0 end) as 'broken' , 
+		sum(case when status='送修' then 1 else 0 end) as 'repairing' , 
+		sum(case when status='报废' then 1 else 0 end) as 'scrap' ,
+		count(equipmentname) as 'total' 
+		from t_equipment  
+		where department = #{department}
 	</select>
 	
 </mapper>

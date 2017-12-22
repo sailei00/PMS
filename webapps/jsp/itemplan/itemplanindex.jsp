@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://jsptags.com/tags/navigation/pager" prefix="pg" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -53,6 +54,41 @@
 				<table  width=" 90%" border="1">
 					<caption>查询结果</caption>
 					<tr>
+						<td colspan="11" align="center">
+						<pg:pager url="/itemplan/query" items="${pageInfo.total}"  maxPageItems="${pageInfo.pageSize}"  export="currPageNo=pageNumber">
+						<pg:param name="itemCode"/>
+						<pg:param name="itemName"/>
+						<pg:param name="department"/>
+						<pg:param name="planMonth"/>
+						<pg:param name="planMonthEnd"/>
+						<pg:param name="costType"/>
+						共查询到${pageInfo.total} 条数据，
+							<pg:first>
+								<a href="${pageUrl }"  >首页</a>         
+							</pg:first>
+							<pg:prev>
+								<a href="${pageUrl }"  >上一页</a>
+							</pg:prev>
+							<pg:pages>
+								<c:choose>
+						         <c:when test="${pageNumber eq currPageNo}">
+						                  [${pageNumber}]
+						         </c:when>
+						         <c:otherwise>
+						                  <a href="${pageUrl }"  >${pageNumber}</a>
+						         </c:otherwise>
+								</c:choose>
+							</pg:pages>
+							<pg:next>
+								<a href="${pageUrl }"  >下一页</a>
+							</pg:next>
+							<pg:last>
+								<a href="${pageUrl }"  >尾页</a>
+							</pg:last>
+						</pg:pager>
+						</td>
+					</tr>
+					<tr>
 						<td align="center">序号</td>
  <!-- 						<td align="center">计划编号</td> -->
 						<td align="center">计划月份</td>
@@ -67,7 +103,7 @@
 						<td align="center" style="width:69px;">操作</td>
 						<c:forEach items="${itemplanlist}" var="it"  varStatus="status">
 							<tr>
-								<td align="center">${status.index + 1}</td>
+								<td align="center">${status.index + 1 + (pageInfo.pageNum-1) * pageInfo.pageSize }</td>
 <%-- 								<td align="center">${it.id}</td> --%>
 								<td align="center">${it.planMonth}</td>
 								<td align="center">${it.itemCode} </td>

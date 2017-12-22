@@ -24,15 +24,16 @@ public class IndexController {
 		this.userDao = userDao;
 	}
 
-	@RequestMapping(value="/",method=RequestMethod.GET)
-	public String index(){
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String index() {
 		return "/index";
 	}
-	
-	@RequestMapping(value="/login",method=RequestMethod.GET)
-	public String login(){
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login() {
 		return "/login";
 	}
+
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(String usercode, String password, Model model) {
 		User user = userDao.load(usercode);

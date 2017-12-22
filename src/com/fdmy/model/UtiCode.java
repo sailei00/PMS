@@ -3,6 +3,8 @@ package com.fdmy.model;
 public class UtiCode {
 	private String codeType;
 	private String codeTypeDesc;
+	private String upperCodeType;
+	private String upperCodeCode;
 	private String codeCode;
 	private String codeName;
 	private String codeCode1;
@@ -23,6 +25,22 @@ public class UtiCode {
 
 	public void setCodeTypeDesc(String codeTypeDesc) {
 		this.codeTypeDesc = "".equals(codeTypeDesc) ? null : codeTypeDesc;
+	}
+	
+	public String getUpperCodeType() {
+		return upperCodeType;
+	}
+
+	public void setUpperCodeType(String upperCodeType) {
+		this.upperCodeType = "".equals(upperCodeType) ? null : upperCodeType;
+	}
+
+	public String getUpperCodeCode() {
+		return upperCodeCode;
+	}
+
+	public void setUpperCodeCode(String upperCodeCode) {
+		this.upperCodeCode = "".equals(upperCodeCode) ? null : upperCodeCode;
 	}
 
 	public String getCodeCode() {
